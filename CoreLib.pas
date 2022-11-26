@@ -33,6 +33,7 @@ type TransportationMatrix = class
     
     procedure Print();
     procedure DistributeCargo();
+    procedure CalculatePotentials();
     function FindMinRateCellIndexes(): (integer, integer);
     function IsDistributeComplete(): boolean;
 end;
@@ -210,6 +211,39 @@ begin
         end;
       end;
     end;
+  end;
+end;
+
+procedure TransportationMatrix.CalculatePotentials();
+var
+  isCalculatedRow: array of boolean := ArrFill(self._potentialsRow.Length, false);
+  isCalculatedColumn: array of boolean := ArrFill(self._potentialsColumn.Length, false);
+begin
+  isCalculatedColumn[0] := true;
+  self._potentialsColumn[0] := 0;
+  
+  while (isCalculatedRow.Any(x -> not x) or isCalculatedColumn.Any(x -> not x)) do
+  begin
+    for var i := 0 to self._rateMatrix.GetLength(0) - 1 do
+      for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
+      begin
+        if (
+          (isCalculatedRow[j] and isCalculatedColumn[i])
+          or (self._cargoToTransitMatrix[i,j] = 0)
+        ) then
+          continue;
+        
+        if (isCalculatedColumn[i] and not isCalculatedRow[j]) then
+        begin
+          self._potentialsRow[j] := self._rateMatrix[i,j] - self._potentialsColumn[i];
+          isCalculatedRow[j] := true;
+        end
+        else if (isCalculatedRow[j] and not isCalculatedColumn[i]) then
+        begin
+          self._potentialsColumn[i] := self._rateMatrix[i,j] - self._potentialsRow[j];
+          isCalculatedColumn[i] := true;
+        end;
+      end;
   end;
 end;
 
