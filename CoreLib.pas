@@ -8,17 +8,23 @@ type TransportationMatrix = class
     _rateMatrix: array[,] of integer;
     _manufacturerVolumes: array of integer;
     _customerVolumes: array of integer;
+    _potentialsRow: array of integer;
+    _potentialsColumn: array of integer;
   public
     constructor(
       rateMatrix: array[,] of integer;
       manufacturerVolumes: array of integer;
-      customerVolumes: array of integer
+      customerVolumes: array of integer;
+      potentialsRow: array of integer;
+      potentialsColumn: array of integer
     );
     begin
       _rateMatrix := rateMatrix;
       _cargoToTransitMatrix := new integer[rateMatrix.GetLength(0), rateMatrix.GetLength(1)];
       _manufacturerVolumes := manufacturerVolumes;
       _customerVolumes := customerVolumes;
+      _potentialsRow := potentialsRow;
+      _potentialsColumn := potentialsColumn;
     end;
     
     property RateMatrix: array[,] of integer read _rateMatrix;
@@ -37,33 +43,49 @@ procedure TransportationMatrix.Print();
 var
   cellWidth: integer := 9;
 begin
+  // potentials row
+  Write('':cellWidth + 6);
+  for var i := 0 to self._potentialsRow.Length - 1 do
+    Write($'{self._potentialsRow[i]}    ':cellWidth + 1);
+  Writeln();
+  
   // 1st row
-  for var i := 0 to self._rateMatrix.GetLength(1) do
+  Write('':cellWidth + 5, '|');
+  for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
     Write('':cellWidth, '|');
   Writeln();
-  Write('':cellWidth, '|');
+  Write('':cellWidth + 5, '|');
   for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
     Write($'a{i + 1}   ':cellWidth, '|');
   Writeln();
-  for var i := 0 to self._rateMatrix.GetLength(1) do
+  Write('':cellWidth + 5, '|');
+  for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
     Write('':cellWidth, '|');
   Writeln();
   
-  // matrix
-  for var i := 0 to self._rateMatrix.GetLength(1) + 1 do
+  // divider
+  Write('——————————':cellWidth + 6);
+  for var i := 0 to self._rateMatrix.GetLength(1) do
     Write('——————————':cellWidth + 1);
   Writeln();
+  
+  // matrix
   for var i := 0 to self._rateMatrix.GetLength(0) - 1 do
   begin
     // rates row
-    Write('':cellWidth, '|');
+    Write('':cellWidth + 5, '|');
     for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
       Write(self._rateMatrix[i,j]:cellWidth, '|');
     Writeln();
     // empty row
-    for var j := 0 to self._rateMatrix.GetLength(1) do
+    Write('':cellWidth + 5, '|');
+    for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
       Write('':cellWidth, '|');
     Writeln();
+    
+    // potential column
+    Write($'{self._potentialsColumn[i]}':cellWidth - 4);
+    
     // cargo to transit row
     Write($'A{i + 1}   ':cellWidth, '|');
     for var j := 0 to self._cargoToTransitMatrix.GetLength(1) - 1 do
@@ -72,26 +94,32 @@ begin
     Write($'{self._manufacturerVolumes[i]}   ':cellWidth);
     Writeln();
     // empty row
-    for var j := 0 to self._rateMatrix.GetLength(1) do
+    Write('':cellWidth + 5, '|');
+    for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
       Write('':cellWidth, '|');
     Writeln();
-    for var j := 0 to self._rateMatrix.GetLength(1) do
+    Write('':cellWidth + 5, '|');
+    for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
       Write('':cellWidth, '|');
     Writeln();
     // divider
-    for var j := 0 to self._rateMatrix.GetLength(1) + 1 do
+    Write('——————————':cellWidth + 6);
+    for var j := 0 to self._rateMatrix.GetLength(1) do
       Write('——————————':cellWidth + 1);
     Writeln();
   end;
+  
   // customer volume
-  for var i := 0 to self._rateMatrix.GetLength(1) do
+  Write('':cellWidth + 5, '|');
+  for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
       Write('':cellWidth, '|');
   Writeln();
-  Write('':cellWidth, '|');
+  Write('':cellWidth + 5, '|');
   for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
     Write($'{self._customerVolumes[i]}   ':cellWidth, '|');
   Writeln();
-  for var i := 0 to self._rateMatrix.GetLength(1) do
+  Write('':cellWidth + 5, '|');
+  for var i := 0 to self._rateMatrix.GetLength(1) - 1 do
     Write('':cellWidth, '|');
   Writeln();
 end;

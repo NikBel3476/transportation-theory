@@ -13,10 +13,14 @@ var
   );
   manufacturerVolumesExample1: array of integer := (85, 112, 72, 120);
   customerVolumesExample1: array of integer := (75, 125, 64, 65, 60);
+  potentialsRowExample1: array of integer := ArrFill(5, 0);
+  potentialsColumnExample1: array of integer := ArrFill(4, 0);
   example1: TransportationMatrix := new TransportationMatrix(
     rateMatrixExample1,
     manufacturerVolumesExample1,
-    customerVolumesExample1
+    customerVolumesExample1,
+    potentialsRowExample1,
+    potentialsColumnExample1
   );
   
   rateMatrixExample2: array[,] of integer := (
@@ -26,10 +30,14 @@ var
   );
   manufacturerVolumesExample2: array of integer := (90, 70, 50);
   customerVolumesExample2: array of integer := (80, 60, 40, 30);
+  potentialsRowExample2: array of integer := new integer[4];
+  potentialsColumnExample2: array of integer := new integer[3];
   example2: TransportationMatrix := new TransportationMatrix(
     rateMatrixExample2,
     manufacturerVolumesExample2,
-    customerVolumesExample2
+    customerVolumesExample2,
+    potentialsRowExample2,
+    potentialsColumnExample2
   );
 
 begin
@@ -37,7 +45,7 @@ begin
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example2;
+  currentExample := example1;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();
