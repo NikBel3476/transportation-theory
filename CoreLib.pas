@@ -36,6 +36,7 @@ type TransportationMatrix = class
     procedure CalculatePotentials();
     function FindMinRateCellIndexes(): (integer, integer);
     function IsDistributeComplete(): boolean;
+    function FindPivotCellIndexes(): (integer, integer);
 end;
 
 implementation
@@ -293,6 +294,24 @@ begin
       break;
     end;
   end;
+end;
+
+function TransportationMatrix.FindPivotCellIndexes(): (integer, integer);
+var
+  minDifference: integer := MaxInt;
+  difference: integer;
+begin
+  Result := (-1, -1);
+  for var i := 0 to self._rateMatrix.GetLength(0) - 1 do
+    for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
+    begin
+      difference := self._rateMatrix[i,j] - self._potentialsRow[j] - self._potentialsColumn[i];
+      if ((difference < 0) and (minDifference > difference)) then
+      begin
+        minDifference := difference;
+        Result := (i, j);
+      end;
+    end;
 end;
 
 end.

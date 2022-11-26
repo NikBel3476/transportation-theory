@@ -58,5 +58,6 @@ begin
   Writeln('Результат первоначального распределения');
   currentExample.DistributeCargo();
   currentExample.CalculatePotentials();
+  
   currentExample.Print();
 end.
