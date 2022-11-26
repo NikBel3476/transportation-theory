@@ -1,6 +1,10 @@
-﻿uses CoreLib;
+﻿//uses crt;
+uses CoreLib;
 
 var
+  optimizingStep: integer := 1;
+  currentExample: TransportationMatrix;
+  
   rateMatrixExample1: array[,] of integer := (
     ( 7, 1, 4,  5,  2),
     (13, 4, 7,  6,  3),
@@ -16,6 +20,21 @@ var
   );
 
 begin
+//  Console.OutputEncoding := System.Text.Encoding.GetEncoding(866);
+//  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
-  example1.Print();
+  
+  currentExample := example1;
+  currentExample.Print();
+  
+  var minRateIndexes := currentExample.FindMinRateCellIndexes();
+  Writeln(
+    'Индекс элемента с минимальным тарифом: ',
+    $'({minRateIndexes.Item1 + 1} {minRateIndexes.Item2 + 1})'
+  );
+  
+  Writeln('=======================================');
+  Writeln('Результат первоначального распределения');
+  currentExample.DistributeCargo();
+  currentExample.Print();
 end.
