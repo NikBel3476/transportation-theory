@@ -18,13 +18,26 @@ var
     manufacturerVolumesExample1,
     customerVolumesExample1
   );
+  
+  rateMatrixExample2: array[,] of integer := (
+    (2, 1, 3, 2),
+    (2, 3, 3, 1),
+    (3, 3, 2, 1)
+  );
+  manufacturerVolumesExample2: array of integer := (90, 70, 50);
+  customerVolumesExample2: array of integer := (80, 60, 40, 30);
+  example2: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample2,
+    manufacturerVolumesExample2,
+    customerVolumesExample2
+  );
 
 begin
 //  Console.OutputEncoding := System.Text.Encoding.GetEncoding(866);
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example1;
+  currentExample := example2;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();
