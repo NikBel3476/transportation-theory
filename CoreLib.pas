@@ -10,6 +10,8 @@ type TransportationMatrix = class
     _customerVolumes: array of integer;
     _potentialsRow: array of integer;
     _potentialsColumn: array of integer;
+    
+    function FindPathStep(pivotIndexes: (integer, integer); visited: Queue<(integer, integer)>): boolean;
   public
     constructor(
       rateMatrix: array[,] of integer;
@@ -37,6 +39,7 @@ type TransportationMatrix = class
     function FindMinRateCellIndexes(): (integer, integer);
     function IsDistributeComplete(): boolean;
     function FindPivotCellIndexes(): (integer, integer);
+    function FindPath(pivotIndexes: (integer, integer)): array[,] of integer;
 end;
 
 implementation
@@ -312,6 +315,76 @@ begin
         Result := (i, j);
       end;
     end;
+end;
+
+function TransportationMatrix.FindPath(pivotIndexes: (integer, integer)): array[,] of integer;
+var
+  sign: integer := -1;
+  path: Queue<(integer, integer)> := new Queue<(integer, integer)>;
+begin
+  path.Enqueue(pivotIndexes);
+  self.FindPathStep(pivotIndexes, path);
+  Writeln(path);
+end;
+
+function TransportationMatrix.FindPathStep(
+  pivotIndexes: (integer, integer);
+  visited: Queue<(integer, integer)>
+): boolean;
+var
+  nextCells: Queue<(integer, integer)> := new Queue<(integer, integer)>;
+begin
+  Result := false;
+  
+  // element finded
+  if (visited.Count > 3) then
+  begin
+    var originPivotElement := visited.Peek();
+    if (
+      (visited.Count mod 2 = 0)
+      and ((pivotIndexes.Item1 = originPivotelement.Item1) or (pivotIndexes.Item2 = originPivotElement.Item2))
+    ) then
+      begin
+        Result := true;
+        exit;          
+      end;
+  end;
+  
+  // find next cells in column
+  for var i := 0 to self._cargoToTransitMatrix.GetLength(0) - 1 do
+  begin
+    if (
+      (i = pivotIndexes.Item1)
+      or visited.Contains((i, pivotIndexes.Item2))
+      or (self._cargoToTransitMatrix[i, pivotIndexes.Item2] = 0)
+    ) then
+      continue;
+    
+    nextCells.Enqueue((i, pivotIndexes.Item2));
+  end;
+  
+  // find next cells in row
+  for var i := 0 to self._cargoToTransitMatrix.GetLength(1) - 1 do
+  begin
+    if (
+      (i = pivotIndexes.Item2)
+      or visited.Contains((pivotIndexes.Item1, i))
+      or (self._cargoToTransitMatrix[pivotIndexes.Item1, i] = 0)
+    ) then
+      continue;
+    
+    nextCells.Enqueue((pivotIndexes.Item1, i));
+  end;
+  
+  while (nextCells.Count > 0) do
+  begin
+    var nextCell := nextCells.Dequeue();
+    visited.Enqueue(nextCell);
+    Result := self.FindPathStep(nextCell, visited);
+    if (Result = true) then
+      exit;
+    visited.Dequeue();
+  end;
 end;
 
 end.

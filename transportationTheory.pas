@@ -58,6 +58,8 @@ begin
   Writeln('Результат первоначального распределения');
   currentExample.DistributeCargo();
   currentExample.CalculatePotentials();
+  var pivotCellIndexes := currentExample.FindPivotCellIndexes();
+  currentExample.FindPath(pivotCellIndexes);
   
   currentExample.Print();
 end.
