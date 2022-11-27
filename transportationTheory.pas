@@ -62,7 +62,7 @@ begin
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example3;
+  currentExample := example1;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();
@@ -72,9 +72,11 @@ begin
   );
   
   Writeln('=======================================');
-  Writeln('Результат первоначального распределения');
   currentExample.DistributeCargo();
   currentExample.CalculatePotentials();
+  Writeln('Результат первоначального распределения');
+  currentExample.Print();
+  
   var pivotCellIndexes := currentExample.FindPivotCellIndexes();
   
   if (pivotCellIndexes = (-1, -1)) then
@@ -83,7 +85,10 @@ begin
     exit;
   end;
   
+  Writeln('=======================================');
   currentExample.FindPath(pivotCellIndexes);
-  
+  Writeln($'Оптимизация {optimizingStep}');
   currentExample.Print();
+  
+  optimizingStep += 1;
 end.
