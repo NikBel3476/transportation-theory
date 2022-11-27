@@ -39,13 +39,30 @@ var
     potentialsRowExample2,
     potentialsColumnExample2
   );
+  
+  rateMatrixExample3: array[,] of integer := (
+    (12,  5,  3, 11),
+    ( 2, 17, 30,  4),
+    (23,  3, 12,  1)
+  );
+  manufacturerVolumesExample3: array of integer := (55, 93, 27);
+  customerVolumesExample3: array of integer := (42, 63, 57, 13);
+  potentialsRowExample3: array of integer := new integer[4];
+  potentialsColumnExample3: array of integer := new integer[3];
+  example3: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample3,
+    manufacturerVolumesExample3,
+    customerVolumesExample3,
+    potentialsRowExample3,
+    potentialsColumnExample3
+  );
 
 begin
 //  Console.OutputEncoding := System.Text.Encoding.GetEncoding(866);
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example1;
+  currentExample := example3;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();
@@ -59,6 +76,13 @@ begin
   currentExample.DistributeCargo();
   currentExample.CalculatePotentials();
   var pivotCellIndexes := currentExample.FindPivotCellIndexes();
+  
+  if (pivotCellIndexes = (-1, -1)) then
+  begin
+    Writeln('Ответ: ');
+    exit;
+  end;
+  
   currentExample.FindPath(pivotCellIndexes);
   
   currentExample.Print();
