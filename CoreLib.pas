@@ -41,6 +41,7 @@ type TransportationMatrix = class
     function IsDistributeComplete(): boolean;
     function FindPivotCellIndexes(): (integer, integer);
     function FindPath(pivotIndexes: (integer, integer)): array of (integer, integer);
+    function CalculatePrice(): integer;
 end;
 
 implementation
@@ -407,6 +408,14 @@ begin
       exit;
     visited.Dequeue();
   end;
+end;
+
+function TransportationMatrix.CalculatePrice(): integer;
+begin
+  Result := 0;
+  for var i := 0 to self._cargoToTransitMatrix.GetLength(0) - 1 do
+    for var j := 0 to self._cargoToTransitMatrix.GetLength(1) - 1 do
+      Result += self._cargoToTransitMatrix[i, j] * self._rateMatrix[i, j];
 end;
 
 end.

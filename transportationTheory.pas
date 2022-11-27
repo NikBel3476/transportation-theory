@@ -77,18 +77,26 @@ begin
   Writeln('Результат первоначального распределения');
   currentExample.Print();
   
-  var pivotCellIndexes := currentExample.FindPivotCellIndexes();
-  if (pivotCellIndexes = (-1, -1)) then
+  while (true) do
   begin
-    Writeln('Ответ: ');
-    exit;
+    var pivotCellIndexes := currentExample.FindPivotCellIndexes();
+    if (pivotCellIndexes = (-1, -1)) then
+    begin
+      Writeln('Ответ: ');
+      var totalPrice := currentExample.CalculatePrice();
+      Writeln($'f = {totalPrice}');
+      exit;
+    end;
+    
+    var path := currentExample.FindPath(pivotCellIndexes);
+    Writeln($'Индекс начального элемента контура: ({path[0].Item1 + 1} {path[0].Item2 + 1})');
+    
+    Writeln('============================================================================');
+    currentExample.Optimize(path);
+    currentExample.CalculatePotentials();
+    Writeln($'Оптимизация {optimizingStep}');
+    currentExample.Print();
+    
+    optimizingStep += 1;    
   end;
-  
-  Writeln('==============================================================================');
-  var path := currentExample.FindPath(pivotCellIndexes);
-  currentExample.Optimize(path);
-  Writeln($'Оптимизация {optimizingStep}');
-  currentExample.Print();
-  
-  optimizingStep += 1;
 end.
