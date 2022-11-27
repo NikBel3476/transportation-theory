@@ -36,10 +36,11 @@ type TransportationMatrix = class
     procedure Print();
     procedure DistributeCargo();
     procedure CalculatePotentials();
+    procedure Optimize(path: array of (integer, integer));
     function FindMinRateCellIndexes(): (integer, integer);
     function IsDistributeComplete(): boolean;
     function FindPivotCellIndexes(): (integer, integer);
-    function FindPath(pivotIndexes: (integer, integer)): array[,] of integer;
+    function FindPath(pivotIndexes: (integer, integer)): array of (integer, integer);
 end;
 
 implementation
@@ -251,6 +252,26 @@ begin
   end;
 end;
 
+procedure TransportationMatrix.Optimize(path: array of (integer, integer));
+var
+  minCargoValue: integer := MaxInt;
+begin
+  // find min cargo value
+  for var i := 0 to path.Length - 1 do
+  begin
+    var currentCargoValue := self._cargoToTransitMatrix[path[i].Item1, path[i].Item2];
+    if ((i mod 2 = 1) and (minCargoValue > currentCargoValue)) then
+      minCargoValue := currentCargoValue;
+  end;
+  
+  // optimize
+  for var i := 0 to path.Length - 1 do
+    if (i mod 2 = 0) then
+      self._cargoToTransitMatrix[path[i].Item1, path[i].Item2] += minCargoValue
+    else
+      self._cargoToTransitMatrix[path[i].Item1, path[i].Item2] -= minCargoValue;
+end;
+
 function TransportationMatrix.FindMinRateCellIndexes: (integer, integer);
 var
   minRate: integer := MaxInt;
@@ -317,33 +338,15 @@ begin
     end;
 end;
 
-function TransportationMatrix.FindPath(pivotIndexes: (integer, integer)): array[,] of integer;
+function TransportationMatrix.FindPath(pivotIndexes: (integer, integer)): array of (integer, integer);
 var
-  sign: integer := -1;
   path: Queue<(integer, integer)> := new Queue<(integer, integer)>;
-  minCargoValue: integer := MaxInt;
+  
 begin
   path.Enqueue(pivotIndexes);
   self.FindPathStep(pivotIndexes, path);
   
-  var pathArray := path.ToArray();
-  // find min cargo value
-  for var i := 0 to pathArray.Length - 1 do
-  begin
-    var currentCargoValue := self._cargoToTransitMatrix[pathArray[i].Item1, pathArray[i].Item2];
-    if (
-      (i mod 2 = 1)
-      and (minCargoValue > currentCargoValue)
-    ) then
-      minCargoValue := currentCargoValue;
-  end;
-  
-  // optimize
-  for var i := 0 to pathArray.Length - 1 do
-    if (i mod 2 = 0) then
-      self._cargoToTransitMatrix[pathArray[i].Item1, pathArray[i].Item2] += minCargoValue
-    else
-      self._cargoToTransitMatrix[pathArray[i].Item1, pathArray[i].Item2] -= minCargoValue;
+  Result := path.ToArray();
 end;
 
 function TransportationMatrix.FindPathStep(

@@ -71,22 +71,22 @@ begin
     $'({minRateIndexes.Item1 + 1} {minRateIndexes.Item2 + 1})'
   );
   
-  Writeln('=======================================');
+  Writeln('==============================================================================');
   currentExample.DistributeCargo();
   currentExample.CalculatePotentials();
   Writeln('Результат первоначального распределения');
   currentExample.Print();
   
   var pivotCellIndexes := currentExample.FindPivotCellIndexes();
-  
   if (pivotCellIndexes = (-1, -1)) then
   begin
     Writeln('Ответ: ');
     exit;
   end;
   
-  Writeln('=======================================');
-  currentExample.FindPath(pivotCellIndexes);
+  Writeln('==============================================================================');
+  var path := currentExample.FindPath(pivotCellIndexes);
+  currentExample.Optimize(path);
   Writeln($'Оптимизация {optimizingStep}');
   currentExample.Print();
   
