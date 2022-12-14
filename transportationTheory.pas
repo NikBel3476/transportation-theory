@@ -56,13 +56,67 @@ var
     potentialsRowExample3,
     potentialsColumnExample3
   );
+  
+  rateMatrixExample4: array[,] of integer := (
+    ( 2, 24,  4,  2,  3),
+    (20, 10, 15, 27,  7),
+    (15, 15, 12, 25, 19),
+    ( 2,  6,  3,  5,  5)
+  );
+  manufacturerVolumesExample4: array of integer := (28, 13, 15, 30);
+  customerVolumesExample4: array of integer := (27, 16, 25, 11, 7);
+  potentialsRowExample4: array of integer := new integer[5];
+  potentialsColumnExample4: array of integer := new integer[4];
+  example4: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample4,
+    manufacturerVolumesExample4,
+    customerVolumesExample4,
+    potentialsRowExample4,
+    potentialsColumnExample4
+  );
+  
+  rateMatrixExample5: array[,] of integer := (
+    (16, 30, 17, 10,  4),
+    (30, 27, 26,  9, 23),
+    (13,  4, 22,  3,  1),
+    ( 3,  1,  5,  4, 24)
+  );
+  manufacturerVolumesExample5: array of integer := (4, 6, 10, 10);
+  customerVolumesExample5: array of integer := (7, 7, 7, 7, 2);
+  potentialsRowExample5: array of integer := new integer[5];
+  potentialsColumnExample5: array of integer := new integer[4];
+  example5: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample5,
+    manufacturerVolumesExample5,
+    customerVolumesExample5,
+    potentialsRowExample5,
+    potentialsColumnExample5
+  );
+  
+  rateMatrixExample6: array[,] of integer := (
+    ( 5, 15,  3,  6, 10),
+    (23,  8, 13, 27, 12),
+    (30,  1,  5, 24, 25),
+    ( 8, 26,  7, 28,  9)
+  );
+  manufacturerVolumesExample6: array of integer := (9, 11, 14, 16);
+  customerVolumesExample6: array of integer := (8, 9, 13, 8, 12);
+  potentialsRowExample6: array of integer := new integer[5];
+  potentialsColumnExample6: array of integer := new integer[4];
+  example6: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample6,
+    manufacturerVolumesExample6,
+    customerVolumesExample6,
+    potentialsRowExample6,
+    potentialsColumnExample6
+  );
 
 begin
 //  Console.OutputEncoding := System.Text.Encoding.GetEncoding(866);
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example1;
+  currentExample := example5;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();

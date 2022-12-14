@@ -11,7 +11,7 @@ type TransportationMatrix = class
     _potentialsRow: array of integer;
     _potentialsColumn: array of integer;
     
-    function FindPathStep(pivotIndexes: (integer, integer); visited: Queue<(integer, integer)>): boolean;
+    function FindPathStep(pivotIndexes: (integer, integer); visited: List<(integer, integer)>): boolean;
   public
     constructor(
       rateMatrix: array[,] of integer;
@@ -341,10 +341,10 @@ end;
 
 function TransportationMatrix.FindPath(pivotIndexes: (integer, integer)): array of (integer, integer);
 var
-  path: Queue<(integer, integer)> := new Queue<(integer, integer)>;
+  path: List<(integer, integer)> := new List<(integer, integer)>;
   
 begin
-  path.Enqueue(pivotIndexes);
+  path.Add(pivotIndexes);
   self.FindPathStep(pivotIndexes, path);
   
   Result := path.ToArray();
@@ -352,17 +352,17 @@ end;
 
 function TransportationMatrix.FindPathStep(
   pivotIndexes: (integer, integer);
-  visited: Queue<(integer, integer)>
+  visited: List<(integer, integer)>
 ): boolean;
 var
   nextCells: Queue<(integer, integer)> := new Queue<(integer, integer)>;
 begin
   Result := false;
   
-  // element finded
+  // if element finded
   if (visited.Count > 3) then
   begin
-    var originPivotElement := visited.Peek();
+    var originPivotElement := visited.First();
     if (
       (visited.Count mod 2 = 0)
       and ((pivotIndexes.Item1 = originPivotelement.Item1) or (pivotIndexes.Item2 = originPivotElement.Item2))
@@ -402,11 +402,11 @@ begin
   while (nextCells.Count > 0) do
   begin
     var nextCell := nextCells.Dequeue();
-    visited.Enqueue(nextCell);
+    visited.Add(nextCell);
     Result := self.FindPathStep(nextCell, visited);
     if (Result = true) then
       exit;
-    visited.Dequeue();
+    visited.RemoveAt(visited.Count - 1);
   end;
 end;
 
