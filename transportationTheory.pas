@@ -110,13 +110,31 @@ var
     potentialsRowExample6,
     potentialsColumnExample6
   );
+  
+  rateMatrixExample7: array[,] of integer := (
+    (17, 20, 29, 26, 25),
+    ( 3,  4,  5, 15, 24),
+    (19,  2, 22,  4, 13),
+    (20, 27,  1, 17, 19)
+  );
+  manufacturerVolumesExample7: array of integer := (15, 15, 15, 15);
+  customerVolumesExample7: array of integer := (11, 11, 11, 11, 16);
+  potentialsRowExample7: array of integer := new integer[5];
+  potentialsColumnExample7: array of integer := new integer[4];
+  example7: TransportationMatrix := new TransportationMatrix(
+    rateMatrixExample7,
+    manufacturerVolumesExample7,
+    customerVolumesExample7,
+    potentialsRowExample7,
+    potentialsColumnExample7
+  );
 
 begin
 //  Console.OutputEncoding := System.Text.Encoding.GetEncoding(866);
 //  TextColor(15); // белый цвет шрифта в консоли
   Writeln('Исходная матрица');
   
-  currentExample := example5;
+  currentExample := example7;
   currentExample.Print();
   
   var minRateIndexes := currentExample.FindMinRateCellIndexes();
@@ -146,7 +164,8 @@ begin
     Writeln($'Индекс начального элемента контура: ({path[0].Item1 + 1} {path[0].Item2 + 1})');
     
     Writeln('============================================================================');
-    currentExample.Optimize(path);
+    if (path.Count > 1) then
+      currentExample.Optimize(path);
     currentExample.CalculatePotentials();
     Writeln($'Оптимизация {optimizingStep}');
     currentExample.Print();

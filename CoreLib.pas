@@ -224,12 +224,17 @@ procedure TransportationMatrix.CalculatePotentials();
 var
   isCalculatedRow: array of boolean := ArrFill(self._potentialsRow.Length, false);
   isCalculatedColumn: array of boolean := ArrFill(self._potentialsColumn.Length, false);
+  prevIsCalculatedRow: array of boolean := ArrFill(self._potentialsRow.Length, false);
+  prevIsCalculatedColumn: array of boolean := ArrFill(self._potentialsColumn.Length, false);
 begin
   isCalculatedColumn[0] := true;
   self._potentialsColumn[0] := 0;
   
   while (isCalculatedRow.Any(x -> not x) or isCalculatedColumn.Any(x -> not x)) do
   begin
+    prevIsCalculatedRow := Copy(isCalculatedRow);
+    prevIsCalculatedColumn := Copy(isCalculatedColumn);
+    
     for var i := 0 to self._rateMatrix.GetLength(0) - 1 do
       for var j := 0 to self._rateMatrix.GetLength(1) - 1 do
       begin
@@ -250,6 +255,12 @@ begin
           isCalculatedColumn[i] := true;
         end;
       end;
+      
+    if (
+      prevIsCalculatedRow.SequenceEqual(isCalculatedRow)
+      and prevIsCalculatedColumn.SequenceEqual(isCalculatedColumn)
+    ) then
+      break;
   end;
 end;
 
@@ -380,6 +391,7 @@ begin
       (i = pivotIndexes.Item1)
       or visited.Contains((i, pivotIndexes.Item2))
       or (self._cargoToTransitMatrix[i, pivotIndexes.Item2] = 0)
+      or (visited.FindAll(indexes -> indexes.Item2 = pivotIndexes.Item2).Count > 1)
     ) then
       continue;
     
@@ -393,6 +405,7 @@ begin
       (i = pivotIndexes.Item2)
       or visited.Contains((pivotIndexes.Item1, i))
       or (self._cargoToTransitMatrix[pivotIndexes.Item1, i] = 0)
+      or (visited.FindAll(indexes -> indexes.Item1 = pivotIndexes.Item1).Count > 1)
     ) then
       continue;
     
